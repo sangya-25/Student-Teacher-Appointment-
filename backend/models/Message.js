@@ -4,17 +4,12 @@ const MessageSchema = new mongoose.Schema({
   from: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    refPath: 'onModel' // Dynamic reference to either Student or Teacher
+    ref: 'Student'
   },
   to: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    refPath: 'onModel' // Dynamic reference to either Student or Teacher
-  },
-  onModel: {
-    type: String,
-    required: true,
-    enum: ['Student', 'Teacher'] // Discriminator for dynamic reference
+    ref: 'Teacher'
   },
   message: {
     type: String,

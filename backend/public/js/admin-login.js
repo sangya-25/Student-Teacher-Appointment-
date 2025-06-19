@@ -88,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
           ease: 'power2.out'
         });
       }
-    });
   });
+});
 
   // Handle form submission
   const adminLoginForm = document.getElementById('adminLoginForm');
   adminLoginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
+  e.preventDefault();
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
@@ -120,14 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Redirect to admin dashboard
         window.location.href = '/admin-dashboard';
-      } else {
+  } else {
         // Login failed
         alert(data.message || 'Invalid credentials');
       }
     } catch (error) {
       console.error('Login error:', error);
       alert('An error occurred during login');
-    }
+  }
   });
 });
   

@@ -20,6 +20,13 @@ const profileOverlay = document.getElementById('profileOverlay');
 // Student Profile Section Logic
 let studentProfileData = null;
 
+// Message modal logic
+const messageModal = document.getElementById('messageModal');
+const messageTeacherIdInput = document.getElementById('messageTeacherId');
+const messageTextInput = document.getElementById('messageText');
+const sendMessageBtn = document.getElementById('sendMessageBtn');
+const cancelMessageBtn = document.getElementById('cancelMessageBtn');
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     // Check authentication
@@ -72,7 +79,7 @@ function showMyAppointmentsSection() {
 // Data Loading Functions
 async function loadTeachers(search = '') {
     const tbody = document.getElementById('teachersTable');
-    tbody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
     try {
         let url = '/api/student/teachers';
         if (search) url += `?search=${encodeURIComponent(search)}`;
@@ -82,7 +89,7 @@ async function loadTeachers(search = '') {
         if (!response.ok) throw new Error((await response.json()).message || 'Failed to load teachers');
         const teachers = await response.json();
         if (!teachers.length) {
-            tbody.innerHTML = '<tr><td colspan="3">No teachers found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4">No teachers found.</td></tr>';
             return;
         }
         tbody.innerHTML = '';
@@ -92,11 +99,12 @@ async function loadTeachers(search = '') {
                 <td>${teacher.fullName}</td>
                 <td>${teacher.department || '-'}</td>
                 <td>${teacher.subjectExpertise || '-'}</td>
+                <td><button class="btn-primary" onclick="openMessageModal('${teacher._id}', '${teacher.fullName.replace(/'/g, "\\'")}')">Message</button></td>
             `;
             tbody.appendChild(tr);
         });
     } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="3">${err.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4">${err.message}</td></tr>`;
     }
 }
 
@@ -288,3 +296,42 @@ if (closeProfileDialogBtn) closeProfileDialogBtn.addEventListener('click', close
 
 // Fetch profile on load
 fetchStudentProfile();
+
+// Message modal logic
+function openMessageModal(teacherId, teacherName) {
+    messageTeacherIdInput.value = teacherId;
+    messageTextInput.value = '';
+    messageModal.style.display = 'block';
+    messageModal.querySelector('h3').textContent = `Send Message to ${teacherName}`;
+}
+
+function closeMessageModal() {
+    messageModal.style.display = 'none';
+}
+
+sendMessageBtn.addEventListener('click', async () => {
+    const teacherId = messageTeacherIdInput.value;
+    const messageContent = messageTextInput.value.trim();
+    if (!messageContent) {
+        alert('Please enter a message.');
+        return;
+    }
+    try {
+        const response = await fetch('/api/student/messages/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ toTeacherId: teacherId, messageContent })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Failed to send message');
+        alert('Message sent successfully!');
+        closeMessageModal();
+    } catch (err) {
+        alert(err.message);
+    }
+});
+
+cancelMessageBtn.addEventListener('click', closeMessageModal);

@@ -154,6 +154,11 @@ router.post('/student/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+    // Only allow login if approved
+    if (!student.approved) {
+      return res.status(403).json({ message: 'Your registration is pending approval by the admin.' });
+    }
+
     // Verify password
     const isMatch = await bcrypt.compare(password, student.password);
     if (!isMatch) {

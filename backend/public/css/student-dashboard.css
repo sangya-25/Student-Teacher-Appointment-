@@ -202,21 +202,88 @@ tr:hover {
     color: white;
 }
 
-/* Book Button Styles */
-.book-btn {
-    background-color: #3b82f6;
-    color: white;
-    padding: 0.6rem 1rem;
+/* Message Button Styling */
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
     border: none;
     border-radius: 6px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.97rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
+    transition: background 0.18s, transform 0.18s;
+    outline: none;
+    margin: 0 0.1rem;
+    box-shadow: none;
+    min-width: 80px;
+}
+.btn-primary:hover, .btn-primary:focus {
+    background: #1e40af;
+    transform: translateY(-1px) scale(1.03);
 }
 
-.book-btn:hover {
-    background-color: #2563eb;
-    transform: translateY(-1px);
+/* Book Button Styling */
+.book-btn {
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.97rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+    outline: none;
+    margin: 0 0.1rem;
+    box-shadow: none;
+    min-width: 80px;
+}
+.book-btn:hover, .book-btn:focus {
+    background: #0369a1;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Confirm Booking Button Styling */
+#confirmBooking {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.38rem 1.1rem;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+    outline: none;
+    margin: 0 0.1rem;
+    box-shadow: none;
+    min-width: 90px;
+}
+#confirmBooking:hover, #confirmBooking:focus {
+    background: #047857;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Cancel Button Styling (Message Modal) */
+#cancelMessageBtn {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.38rem 1.1rem;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+    outline: none;
+    margin: 0 0.1rem;
+    box-shadow: none;
+    min-width: 90px;
+}
+#cancelMessageBtn:hover, #cancelMessageBtn:focus {
+    background: #991b1b;
+    transform: translateY(-1px) scale(1.03);
 }
 
 /* Form Styles */

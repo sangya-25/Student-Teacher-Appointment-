@@ -19,7 +19,7 @@ router.get('/appointments/student', auth, studentController.getStudentAppointmen
 router.get('/appointments/available', auth, studentController.getAvailableAppointmentSlots);
 
 // Student messages
-router.get('/messages/student', auth, studentController.getMessages);
+router.get('/messages/student', auth, studentController.getMessagesSent);
 router.post('/messages/send', auth, studentController.sendMessage);
 
 module.exports = router; 

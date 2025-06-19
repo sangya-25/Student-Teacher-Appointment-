@@ -18,26 +18,31 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const targetSection = link.getAttribute('data-section');
-      
-      // Update active states
       navLinks.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
-      
-      // Show target section with animation
       sections.forEach(section => {
         if (section.id === targetSection) {
-          section.classList.add('active');
+          section.style.display = '';
           gsap.from(section, {
             opacity: 0,
             y: 20,
             duration: 0.5,
             ease: 'power2.out'
           });
+          if (section.id === 'all-students') fetchApprovedStudents();
         } else {
-          section.classList.remove('active');
+          section.style.display = 'none';
         }
       });
     });
+  });
+
+  sections.forEach(section => {
+    if (section.id === 'teachers') {
+      section.style.display = '';
+    } else {
+      section.style.display = 'none';
+    }
   });
 
   // Teacher management
@@ -48,37 +53,202 @@ document.addEventListener('DOMContentLoaded', () => {
   const teacherForm = document.getElementById('teacherForm');
   const teacherList = document.getElementById('teacherList');
 
-  // Sample teacher data
-  let teachers = [
-    { name: "Dr. Sharma", subject: "Physics", dept: "Science", email: "sharma@uni.com", status: "Active" },
-    { name: "Prof. Mehta", subject: "Math", dept: "Engineering", email: "mehta@uni.com", status: "Active" }
-  ];
+  // Edit Teacher Modal
+  const editTeacherModal = document.getElementById('editTeacherModal');
+  const closeEditModal = document.getElementById('closeEditModal');
+  const cancelEdit = document.getElementById('cancelEdit');
+  const editTeacherForm = document.getElementById('editTeacherForm');
+  let editingTeacherId = null;
 
-  // Render teachers table
+  let teachers = [];
+  let students = [];
+
+  async function fetchTeachers() {
+    try {
+      const response = await fetch('/api/admin/teachers', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      teachers = await response.json();
+      renderTeachers();
+    } catch (err) {
+      showNotification('Failed to fetch teachers');
+    }
+  }
+
   function renderTeachers() {
     teacherList.innerHTML = '';
-    teachers.forEach((teacher, index) => {
+    teachers.forEach((teacher) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${teacher.name}</td>
-        <td>${teacher.subject}</td>
-        <td>${teacher.dept}</td>
+        <td>${teacher.fullName}</td>
+        <td>${teacher.subjectExpertise}</td>
+        <td>${teacher.department}</td>
         <td>${teacher.email}</td>
-        <td><span class="status-badge ${teacher.status.toLowerCase()}">${teacher.status}</span></td>
+        <td><span class="status-badge active">Active</span></td>
         <td>
-          <button class="action-btn edit" onclick="editTeacher(${index})">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-btn delete" onclick="deleteTeacher(${index})">
-            <i class="fas fa-trash"></i>
-          </button>
+          <button class="action-btn edit" data-id="${teacher._id}"><i class="fas fa-edit"></i></button>
+          <button class="action-btn delete" data-id="${teacher._id}"><i class="fas fa-trash"></i></button>
         </td>
       `;
       teacherList.appendChild(row);
     });
+    teacherList.querySelectorAll('.edit').forEach(btn => btn.addEventListener('click', (e) => {
+      const id = e.currentTarget.getAttribute('data-id');
+      const teacher = teachers.find(t => t._id === id);
+      if (teacher) showEditModal(teacher);
+    }));
+    teacherList.querySelectorAll('.delete').forEach(btn => btn.addEventListener('click', handleDeleteTeacher));
   }
 
-  // Modal handling
+  function showEditModal(teacher) {
+    editingTeacherId = teacher._id;
+    document.getElementById('editTeacherName').value = teacher.fullName;
+    document.getElementById('editTeacherSubject').value = teacher.subjectExpertise;
+    document.getElementById('editTeacherDepartment').value = teacher.department;
+    editTeacherModal.classList.add('active');
+    gsap.from(editTeacherModal.querySelector('.modal-content'), {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.3,
+      ease: 'back.out(1.7)'
+    });
+  }
+
+  function hideEditModal() {
+    gsap.to(editTeacherModal.querySelector('.modal-content'), {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.2,
+      ease: 'power2.in',
+      onComplete: () => {
+        editTeacherModal.classList.remove('active');
+        editTeacherForm.reset();
+      }
+    });
+  }
+
+  closeEditModal.addEventListener('click', hideEditModal);
+  cancelEdit.addEventListener('click', hideEditModal);
+
+  editTeacherForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fullName = document.getElementById('editTeacherName').value;
+    const subjectExpertise = document.getElementById('editTeacherSubject').value;
+    const department = document.getElementById('editTeacherDepartment').value;
+    if (editingTeacherId) {
+      try {
+        const response = await fetch(`/api/admin/teachers/${editingTeacherId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ fullName, subjectExpertise, department })
+        });
+        if (response.ok) {
+          showNotification('Teacher updated');
+          fetchTeachers();
+          hideEditModal();
+        } else {
+          showNotification('Failed to update teacher');
+        }
+      } catch {
+        showNotification('Server error');
+      }
+    }
+  });
+
+  async function handleDeleteTeacher(e) {
+    const id = e.currentTarget.getAttribute('data-id');
+    if (confirm('Are you sure you want to delete this teacher?')) {
+      try {
+        const response = await fetch(`/api/admin/teachers/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (response.ok) {
+          showNotification('Teacher deleted');
+          fetchTeachers();
+        } else {
+          showNotification('Failed to delete teacher');
+        }
+      } catch {
+        showNotification('Server error');
+      }
+    }
+  }
+
+  // Fetch and render all students (pending approval)
+  async function fetchStudents() {
+    try {
+      const response = await fetch('/api/admin/students', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      students = await response.json();
+      renderStudents();
+    } catch (err) {
+      showNotification('Failed to fetch students');
+    }
+  }
+
+  function renderStudents() {
+    const studentList = document.getElementById('studentList');
+    studentList.innerHTML = '';
+    students.filter(s => !s.approved).forEach(student => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${student.fullName}</td>
+        <td>${student.email}</td>
+        <td>${student.enrollmentNumber}</td>
+        <td>${student.courseProgram}</td>
+        <td>${new Date(student.createdAt).toLocaleString()}</td>
+        <td>
+          <button class="approve-btn" data-id="${student._id}"><i class="fas fa-check"></i> Approve</button>
+          <button class="reject-btn" data-id="${student._id}"><i class="fas fa-times"></i> Reject</button>
+        </td>
+      `;
+      studentList.appendChild(row);
+    });
+    studentList.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', handleApproveStudent));
+    studentList.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', handleRejectStudent));
+  }
+
+  async function handleApproveStudent(e) {
+    const id = e.currentTarget.getAttribute('data-id');
+    try {
+      const response = await fetch(`/api/admin/students/${id}/approve`, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (response.ok) {
+        showNotification('Student approved');
+        fetchStudents();
+      } else {
+        showNotification('Failed to approve student');
+      }
+    } catch {
+      showNotification('Server error');
+    }
+  }
+
+  async function handleRejectStudent(e) {
+    const id = e.currentTarget.getAttribute('data-id');
+    if (confirm('Are you sure you want to reject this student?')) {
+      try {
+        const response = await fetch(`/api/admin/students/${id}/reject`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (response.ok) {
+          showNotification('Student rejected');
+          fetchStudents();
+        } else {
+          showNotification('Failed to reject student');
+        }
+      } catch {
+        showNotification('Server error');
+      }
+    }
+  }
+
+  // Modal handling for Add Teacher
   function showModal() {
     teacherModal.classList.add('active');
     gsap.from('.modal-content', {
@@ -102,60 +272,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Event listeners for modal
   addTeacherBtn.addEventListener('click', showModal);
   closeModal.addEventListener('click', hideModal);
   cancelAdd.addEventListener('click', hideModal);
 
-  // Form submission
-  teacherForm.addEventListener('submit', (e) => {
+  teacherForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const newTeacher = {
-      name: document.getElementById('teacherName').value,
-      subject: document.getElementById('teacherSubject').value,
-      dept: document.getElementById('teacherDepartment').value,
+      fullName: document.getElementById('teacherName').value,
+      subjectExpertise: document.getElementById('teacherSubject').value,
+      department: document.getElementById('teacherDepartment').value,
       email: document.getElementById('teacherEmail').value,
-      status: "Active"
+      password: document.getElementById('teacherPassword').value
     };
-    
-    teachers.push(newTeacher);
-    renderTeachers();
-    hideModal();
-    
-    // Show success message
-    showNotification('Teacher added successfully!');
-  });
-
-  // Student approval handling
-  const approveButtons = document.querySelectorAll('.approve-btn');
-  const rejectButtons = document.querySelectorAll('.reject-btn');
-
-  approveButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const card = this.closest('.approval-card');
-      gsap.to(card, {
-        x: 100,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-        onComplete: () => card.remove()
+    try {
+      const response = await fetch('/api/auth/teacher/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTeacher)
       });
-      showNotification('Student approved successfully!');
-    });
-  });
-
-  rejectButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const card = this.closest('.approval-card');
-      gsap.to(card, {
-        x: -100,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-        onComplete: () => card.remove()
-      });
-      showNotification('Student rejected');
-    });
+      const data = await response.json();
+      if (response.ok) {
+        fetchTeachers();
+        hideModal();
+        showNotification('Teacher added successfully!');
+      } else {
+        showNotification(data.message || 'Failed to add teacher.');
+      }
+    } catch (err) {
+      showNotification('Server error. Could not add teacher.');
+    }
   });
 
   // Logout handling
@@ -167,8 +313,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '/admin-login';
   });
 
-  // Initialize the dashboard
-  renderTeachers();
+  // Initial data fetch
+  fetchTeachers();
+  fetchStudents();
+
+  const allStudentList = document.getElementById('allStudentList');
+
+  async function fetchApprovedStudents() {
+    try {
+      const response = await fetch('/api/admin/students/approved', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const approvedStudents = await response.json();
+      renderApprovedStudents(approvedStudents);
+    } catch (err) {
+      showNotification('Failed to fetch approved students');
+    }
+  }
+
+  function renderApprovedStudents(students) {
+    allStudentList.innerHTML = '';
+    students.forEach(student => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${student.fullName}</td>
+        <td>${student.email}</td>
+        <td>${student.enrollmentNumber}</td>
+        <td>${student.courseProgram}</td>
+        <td>${new Date(student.createdAt).toLocaleString()}</td>
+      `;
+      allStudentList.appendChild(row);
+    });
+  }
 });
 
 // Helper functions

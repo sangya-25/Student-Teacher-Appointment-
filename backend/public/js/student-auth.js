@@ -117,12 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('studentData', JSON.stringify(data.student));
-                    showSuccess('Signup successful! Redirecting to dashboard...');
+                    showSuccess('Signup successful! Your registration is pending admin approval. You will be able to log in once approved.');
                     setTimeout(() => {
-                        window.location.href = '/student-dashboard';
-                    }, 2000);
+                        window.location.href = '/student-login';
+                    }, 3000);
                 } else {
                     showError(data.message || 'Signup failed');
                 }

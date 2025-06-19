@@ -58,6 +58,7 @@
                             <th>Name</th>
                             <th>Department</th>
                             <th>Subject Expertise</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="teachersTable">
@@ -126,6 +127,22 @@
                 <div class="modal-actions">
                     <button id="confirmBooking" class="btn-primary">Confirm Booking</button>
                     <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Modal -->
+        <div class="modal" id="messageModal" style="display:none;">
+            <div class="modal-content">
+                <h3>Send Message to Teacher</h3>
+                <input type="hidden" id="messageTeacherId">
+                <div class="form-group">
+                    <label for="messageText">Message:</label>
+                    <textarea id="messageText" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button id="sendMessageBtn" class="btn-primary">Send</button>
+                    <button id="cancelMessageBtn" class="btn-secondary">Cancel</button>
                 </div>
             </div>
         </div>

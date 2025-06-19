@@ -2,6 +2,7 @@ const Student = require('../models/Student');
 const Teacher = require('../models/Teacher');
 const Appointment = require('../models/Appointment');
 const Message = require('../models/Message');
+const sendEmail = require('../utils/sendEmail');
 
 const studentController = {
   // Get student profile
@@ -110,6 +111,32 @@ const studentController = {
 
       await newBooking.save();
 
+      // Send email to teacher
+      const student = await Student.findById(studentId);
+      const teacher = await Teacher.findById(slot.teacherId);
+      if (student && teacher) {
+        const subject = `New Appointment Request from ${student.fullName}`;
+        const html = `
+          <p>Hi Prof. <strong>${teacher.fullName}</strong>,</p>
+          <p>You have a new appointment request from <strong>${student.fullName}</strong>.</p>
+          <ul>
+            <li><strong>📅 Date:</strong> ${slot.date.toLocaleDateString()}</li>
+            <li><strong>🕒 Time:</strong> ${slot.time}</li>
+            <li><strong>Purpose:</strong> ${slot.purpose}</li>
+            <li><strong>Student Email:</strong> ${student.email}</li>
+            <li><strong>Enrollment No.:</strong> ${student.enrollmentNumber || ''}</li>
+            <li><strong>Message:</strong> ${studentMessage || 'N/A'}</li>
+          </ul>
+          <p>Please log in to your dashboard to approve or reject this appointment.</p>
+        `;
+        await sendEmail({
+          to: teacher.email,
+          subject,
+          html,
+          replyTo: student.email
+        });
+      }
+
       res.status(200).json({ message: 'Appointment request sent. Waiting for teacher approval.' });
     } catch (error) {
       console.error('Error booking appointment:', error);
@@ -162,7 +189,6 @@ const studentController = {
       const newMessage = new Message({
         from: fromStudentId,
         to: toTeacherId,
-        onModel: 'Student', // Recipient is Teacher
         message: messageContent
       });
 
@@ -171,6 +197,22 @@ const studentController = {
 
     } catch (error) {
       console.error('Error sending message:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  },
+
+  // View messages sent by the student
+  getMessagesSent: async (req, res) => {
+    try {
+      const studentId = req.user.id; // Authenticated student's ID
+
+      const messages = await Message.find({ from: studentId, onModel: 'Student' })
+                                  .populate('to', 'fullName email') // Populate teacher details
+                                  .sort({ timestamp: 1 });
+
+      res.status(200).json(messages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
       res.status(500).json({ message: 'Internal server error.' });
     }
   }
