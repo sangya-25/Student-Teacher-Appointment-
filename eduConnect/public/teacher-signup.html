@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Sign Up | EduConnect</title>
+  <link rel="stylesheet" href="../css/teacher-auth.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="icon" type="image/png" href="../images/favicon.png"/>
+  <!-- GSAP is not used for signup forms, removed for consistency and performance -->
+</head>
+<body>
+  <button class="role-switch-btn" onclick="window.location.href='/'">
+    <i class="fas fa-home"></i> Back to Home
+  </button>
+  <div class="login-container">
+    <div class="login-card">
+      <h2>Teacher Sign Up</h2>
+      <div id="errorMessage" class="message error" style="display: none;"></div>
+      <div id="successMessage" class="message success" style="display: none;"></div>
+      <div style="text-align:center; margin-top:40px;">
+        <h2>Teacher Signup is only available via Admin.</h2>
+        <p>Please contact your administrator to create a new teacher account.</p>
+      </div>
+      <!--
+      <form id="teacherSignupForm">
+        <div class="input-group">
+          <label for="teacherFullName">Full Name</label>
+          <input type="text" id="teacherFullName" placeholder="" required />
+        </div>
+        <div class="input-group">
+          <label for="teacherSignupEmail">Email</label>
+          <input type="email" id="teacherSignupEmail" placeholder="" required />
+        </div>
+        <div class="input-group">
+          <label for="teacherSignupPassword">Password</label>
+          <div class="password-container">
+            <input type="password" id="teacherSignupPassword" placeholder="" required />
+            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="teacherDepartment">Department</label>
+          <input type="text" id="teacherDepartment" placeholder="e.g., Computer Science" required />
+        </div>
+        <div class="input-group">
+          <label for="teacherSubjectExpertise">Subject Expertise</label>
+          <input type="text" id="teacherSubjectExpertise" placeholder="e.g., Data Structures, Algorithms" required />
+        </div>
+        <button type="submit" class="login-btn">Sign Up</button>
+      </form>
+      -->
+      <p class="note">Already have an account? <a href="/teacher-login" class="switch-form">Login Here</a></p>
+    </div>
+  </div>
+
+  <script src="../js/teacher-auth.js"></script>
+</body>
+</html> 

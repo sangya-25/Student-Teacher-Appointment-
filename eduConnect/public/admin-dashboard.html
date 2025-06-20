@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard | EduConnect</title>
+  <link rel="stylesheet" href="../css/admin-dashboard.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="icon" type="image/png" href="../images/favicon.png"/>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span>EduConnect</span>
+      </div>
+      <ul class="nav-links">
+        <li class="active" data-section="teachers">
+          <a href="#"><i class="fas fa-chalkboard-teacher"></i> All Teachers</a>
+        </li>
+        <li data-section="all-students">
+          <a href="#"><i class="fas fa-users"></i> All Students</a>
+        </li>
+        <li data-section="students">
+          <a href="#"><i class="fas fa-user-graduate"></i> Student Registration Approval</a>
+        </li>
+      </ul>
+      <div class="logout">
+        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <div class="header-content">
+          <h1>Admin Dashboard</h1>
+          <div class="user-info">
+            <span class="user-name">Admin User</span>
+            <img src="../images/admin-icon.png" alt="Admin" class="avatar"/>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Overview -->
+      <section id="dashboard" class="dashboard-section active">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Total Users</h3>
+              <p class="stat-number">1,234</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Active Teachers</h3>
+              <p class="stat-number">45</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Total Students</h3>
+              <p class="stat-number">1,189</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Appointments</h3>
+              <p class="stat-number">156</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+          <h2>Recent Activity</h2>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="activity-details">
+                <h4>New Teacher Added</h4>
+                <p>Dr. Sharma joined the Physics department</p>
+                <span class="activity-time">2 minutes ago</span>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas fa-user-check"></i>
+              </div>
+              <div class="activity-details">
+                <h4>Student Approved</h4>
+                <p>John Doe's registration was approved</p>
+                <span class="activity-time">1 hour ago</span>
+              </div>
+            </div>
+
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fas fa-calendar-plus"></i>
+              </div>
+              <div class="activity-details">
+                <h4>New Appointment</h4>
+                <p>Sarah booked Dr. Sharma for Physics consultation</p>
+                <span class="activity-time">3 hours ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Teachers Section -->
+      <section id="teachers" class="dashboard-section">
+        <div class="section-header">
+          <h2>Manage Teachers</h2>
+          <button style="margin-bottom: 15px;" id="addTeacherBtn" class="primary-btn">
+            <i class="fas fa-plus"></i> Add Teacher
+          </button>
+        </div>
+
+        <div class="teachers-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Subject</th>
+                <th>Department</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherList">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- All Students Section -->
+      <section id="all-students" class="dashboard-section">
+        <div class="section-header">
+          <h2>All Students</h2>
+        </div>
+        <div class="students-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Enrollment No.</th>
+                <th>Course</th>
+                <th>Registration Date</th>
+              </tr>
+            </thead>
+            <tbody id="allStudentList">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Students Section -->
+      <section id="students" class="dashboard-section">
+        <div class="section-header">
+          <h2>Student Registrations</h2>
+        </div>
+        <div class="students-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Enrollment No.</th>
+                <th>Course</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentList">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Appointments Section -->
+      <section id="appointments" class="dashboard-section">
+        <div class="section-header">
+          <h2>Appointments Overview</h2>
+        </div>
+        <div class="appointments-container">
+          <div class="appointment-card">
+            <div class="appointment-header">
+              <i class="fas fa-calendar-check"></i>
+              <h3>Today's Appointments</h3>
+            </div>
+            <div class="appointment-list">
+              <div class="appointment-item">
+                <div class="time">09:00 AM</div>
+                <div class="details">
+                  <h4>Physics Consultation</h4>
+                  <p>Dr. Sharma with Sarah Johnson</p>
+                </div>
+                <div class="status confirmed">Confirmed</div>
+              </div>
+              <div class="appointment-item">
+                <div class="time">11:30 AM</div>
+                <div class="details">
+                  <h4>Math Tutoring</h4>
+                  <p>Prof. Mehta with John Smith</p>
+                </div>
+                <div class="status pending">Pending</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Add Teacher Modal -->
+  <div class="modal" id="teacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Teacher</h3>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <form id="teacherForm">
+        <div class="form-group">
+          <label for="teacherName">Full Name</label>
+          <input type="text" id="teacherName" required />
+        </div>
+        <div class="form-group">
+          <label for="teacherSubject">Subject</label>
+          <input type="text" id="teacherSubject" required />
+        </div>
+        <div class="form-group">
+          <label for="teacherDepartment">Department</label>
+          <input type="text" id="teacherDepartment" required />
+        </div>
+        <div class="form-group">
+          <label for="teacherEmail">Email</label>
+          <input type="email" id="teacherEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="teacherPassword">Password</label>
+          <input type="password" id="teacherPassword" required />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Add Teacher</button>
+          <button type="button" class="secondary-btn" id="cancelAdd">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Teacher Modal -->
+  <div class="modal" id="editTeacherModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Teacher</h3>
+        <button class="close-btn" id="closeEditModal">&times;</button>
+      </div>
+      <form id="editTeacherForm">
+        <div class="form-group">
+          <label for="editTeacherName">Full Name</label>
+          <input type="text" id="editTeacherName" required />
+        </div>
+        <div class="form-group">
+          <label for="editTeacherSubject">Subject</label>
+          <input type="text" id="editTeacherSubject" required />
+        </div>
+        <div class="form-group">
+          <label for="editTeacherDepartment">Department</label>
+          <input type="text" id="editTeacherDepartment" required />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save Changes</button>
+          <button type="button" class="secondary-btn" id="cancelEdit">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

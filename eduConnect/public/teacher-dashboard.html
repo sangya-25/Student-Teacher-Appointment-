@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/teacher-dashboard.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="icon" type="image/png" href="../images/favicon.png"/>
+</head>
+<body>
+    <!-- Profile Section at Top Right (moved outside .container for separation) -->
+    <div class="profile-section" id="teacherProfileSection">
+        <span id="teacherProfileName"></span>
+        <i class="fas fa-user-circle profile-icon" id="teacherProfileIcon" style="font-size:2.2rem;cursor:pointer;"></i>
+    </div>
+    <!-- Profile Dialog -->
+    <div class="profile-dialog-overlay" id="teacherProfileDialogOverlay"></div>
+    <div class="profile-dialog" id="teacherProfileDialog">
+        <div class="profile-dialog-header">
+            <h3>Teacher Profile</h3>
+            <button class="profile-dialog-close" id="closeTeacherProfileDialog">&times;</button>
+        </div>
+        <div class="profile-info">
+            <div class="profile-info-item"><label>Name:</label> <span id="profileTeacherName"></span></div>
+            <div class="profile-info-item"><label>Email:</label> <span id="profileTeacherEmail"></span></div>
+            <div class="profile-info-item"><label>Department:</label> <span id="profileTeacherDepartment"></span></div>
+            <div class="profile-info-item"><label>Subject Expertise:</label> <span id="profileTeacherSubject"></span></div>
+        </div>
+    </div>
+    <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Panel</h2>
+      <button id="scheduleSlotBtn"><i class="fas fa-calendar-plus"></i> Schedule an Appointment</button>
+      <button id="viewAllAppointmentsBtn"><i class="fas fa-list"></i> View All Appointments</button>
+      <button id="pendingAppointmentsBtn"><i class="fas fa-hourglass-half"></i> Pending Appointments</button>
+      <button id="viewMessagesBtn"><i class="fas fa-envelope"></i> View Messages</button>
+      <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <!-- Schedule Slot Section -->
+      <section class="card" id="scheduleSlotSection" style="display: block;">
+        <h2>Schedule an Appointment</h2>
+        <form id="slotForm">
+          <div class="form-group">
+            <label for="appointmentDate">Date</label>
+            <input type="date" id="appointmentDate" required />
+          </div>
+          <div class="form-group">
+            <label for="appointmentTime">Time</label>
+            <input type="time" id="appointmentTime" required />
+          </div>
+          <div class="form-group">
+            <label for="appointmentPurpose">Purpose</label>
+            <input type="text" id="appointmentPurpose" required />
+          </div>
+          <button type="submit" class="btn-primary">Add Slot</button>
+        </form>
+      </section>
+
+      <!-- All Appointments Section -->
+      <section class="card" id="allAppointmentsSection" style="display: none;">
+        <h2>All Appointments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Purpose</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="allAppointmentsTable">
+            <!-- All appointments will be loaded here -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Pending Appointments Section -->
+      <section class="card" id="pendingAppointmentsSection" style="display: none;">
+        <h2>Pending Appointments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Purpose</th>
+              <th>Message</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="pendingAppointmentsTable">
+            <!-- Pending appointments will be loaded here -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- View Messages Section -->
+      <section class="card" id="viewMessagesSection" style="display: none;">
+        <h2>Messages from Students</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Enrollment No.</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="messagesTable">
+            <!-- Messages will be loaded here -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/teacher-dashboard.js"></script>
+</body>
+</html> 

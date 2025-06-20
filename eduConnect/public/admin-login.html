@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login | EduConnect</title>
+  <link rel="stylesheet" href="../css/admin-login.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="icon" type="image/png" href="../images/favicon.png"/>
+</head>
+<body>
+  <button class="role-switch-btn" onclick="window.location.href='/'">
+    <i class="fas fa-home"></i> Back to Home
+  </button>
+  <div class="login-container">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <form id="adminLoginForm">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="password-container">
+            <input type="password" id="password" placeholder="" required />
+            <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <p class="note">Only authorized admin can access this panel.</p>
+    </div>
+  </div>
+
+  <script src="../js/admin-login.js"></script>
+</body>
+</html> 

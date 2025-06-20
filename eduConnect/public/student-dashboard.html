@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/css/student-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/favicon.png"/>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2><i class="fas fa-user-graduate"></i> Student Panel</h2>
+            <button id="viewTeachers"><i class="fas fa-chalkboard-teacher"></i> View All Teachers</button>
+            <button id="bookAppointment"><i class="fas fa-calendar-alt"></i> Book an Appointment</button>
+            <button id="myAppointments"><i class="fas fa-calendar-check"></i> My Appointments</button>
+            <button id="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </aside>
+
+        <!-- Profile Section at Top Right -->
+        <div class="profile-section" id="profileSection">
+            <svg id="studentProfileIcon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+            <span id="studentProfileName">Student</span>
+        </div>
+
+        <!-- Profile Dialog -->
+        <div class="profile-dialog-overlay" id="profileDialogOverlay"></div>
+        <div class="profile-dialog" id="profileDialog">
+            <div class="profile-dialog-header">
+                <h3>Student Profile</h3>
+                <button class="profile-dialog-close" id="closeProfileDialog">&times;</button>
+            </div>
+            <div class="profile-info">
+                <div class="profile-info-item"><label>Name:</label> <span id="profileName"></span></div>
+                <div class="profile-info-item"><label>Email:</label> <span id="profileEmail"></span></div>
+                <div class="profile-info-item"><label>Enrollment Number:</label> <span id="profileEnrollment"></span></div>
+                <div class="profile-info-item"><label>Branch:</label> <span id="profileBranch"></span></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1 class="title">Welcome to Your Dashboard</h1>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search Teacher by Name..." />
+                <i class="fas fa-search search-icon"></i>
+            </div>
+
+            <!-- Teachers List Section -->
+            <section class="card" id="teachersListSection" style="display: block;">
+                <h2>Available Teachers</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Subject Expertise</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachersTable">
+                        <!-- Teachers will be loaded here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Book Appointment Section -->
+            <section class="card" id="bookFormSection" style="display: none;">
+                <h2>Available Appointment Slots</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Purpose</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="availableAppointmentsTable">
+                        <!-- Available appointments will be loaded here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- My Appointments Section -->
+            <section class="card" id="myAppointmentsSection" style="display: none;">
+                <h2>My Appointments</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myAppointmentsTable">
+                        <!-- My appointments will be loaded here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <!-- Booking Modal -->
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal" id="bookingModal">
+            <div class="modal-content">
+                <h3>Book Appointment</h3>
+                <input type="hidden" id="appointmentId">
+                <div class="appointment-details">
+                    <p><strong>Teacher:</strong> <span id="teacherName"></span></p>
+                    <p><strong>Date:</strong> <span id="appointmentDate"></span></p>
+                    <p><strong>Time:</strong> <span id="appointmentTime"></span></p>
+                </div>
+                <div class="form-group">
+                    <label for="messageTextarea">Message to Teacher:</label>
+                    <textarea id="messageTextarea" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button id="confirmBooking" class="btn-primary">Confirm Booking</button>
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Modal -->
+        <div class="modal" id="messageModal" style="display:none;">
+            <div class="modal-content">
+                <h3>Send Message to Teacher</h3>
+                <input type="hidden" id="messageTeacherId">
+                <div class="form-group">
+                    <label for="messageText">Message:</label>
+                    <textarea id="messageText" rows="4" required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button id="sendMessageBtn" class="btn-primary">Send</button>
+                    <button id="cancelMessageBtn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/student-dashboard.js"></script>
+</body>
+</html>
