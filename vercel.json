@@ -4,6 +4,7 @@
     { "src": "server.js", "use": "@vercel/node" }
   ],
   "routes": [
+    { "src": "/(admin-login|teacher-login|student-login|admin-dashboard|teacher-dashboard|student-dashboard|teacher-signup|student-signup)", "dest": "/$1.html" },
     { "src": "/public/(.*)", "dest": "/public/$1" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
