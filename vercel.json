@@ -1,10 +1,10 @@
 {
   "version": 2,
   "builds": [
-    { "src": "eduConnect/server.js", "use": "@vercel/node" }
+    { "src": "server.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/public/(.*)", "dest": "/eduConnect/public/$1" },
-    { "src": "/(.*)", "dest": "/eduConnect/server.js" }
+    { "src": "/public/(.*)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/server.js" }
   ]
 } 
